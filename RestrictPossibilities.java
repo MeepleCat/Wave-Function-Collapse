@@ -1,8 +1,8 @@
 public class RestrictPossibilities {
-    public static Cell collapse(Cell cell, int[] possible) {
+    public static void collapse(Cell cell, int[] possible) {
         if(cell.findEntropy() <= 1) { 
-            //System.out.println(cell.toString() + "has " + cell.findEntropy() + " values remaining\n");
-            return cell;
+            //System.out.println(cell.toString() + "has " + cell.findEntropy() + " values remaining\n");\
+            return;
         } 
         
         int[] values = cell.getValues();
@@ -14,7 +14,6 @@ public class RestrictPossibilities {
             for(int o : possible) {
                 if(values[i] == o) {
                     passed = true;
-
                 }
             }
             
@@ -31,7 +30,5 @@ public class RestrictPossibilities {
         //System.out.println();
         
         cell.setValues(values);
-        
-        return cell;
     }
 }

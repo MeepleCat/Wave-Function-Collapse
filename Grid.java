@@ -87,7 +87,7 @@ public class Grid {
 
             if((cycles - (counted * t / 100)) >= t / 100) {
                 counted++; 
-                System.out.println(counted + "% Done...");
+                System.out.println(counted + "% Done Processing...");
             } 
         }
     }
