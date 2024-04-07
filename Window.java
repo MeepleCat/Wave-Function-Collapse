@@ -4,16 +4,18 @@ import java.awt.*;
 public class Window extends JFrame {
 
     private Cell[][] dataArray;
-    private Color red = new Color(255, 0, 0);
-    private Color redOrange = new Color(255, 140, 0);
-    private Color orange = Color.ORANGE;
-    private Color yellow = Color.YELLOW;
-    private Color green = new Color(0, 255, 0);
-    private Color blue = new Color(0, 0, 255);
-    private Color teal = new Color(0, 128, 128);
-    private Color lightPurple = new Color(153, 102, 255);
-    private Color purple = new Color(120, 0, 255);
-    private Color white = Color.WHITE;
+    private Color[] colors = {
+        new Color(255, 0, 0),        // red
+        new Color(255, 140, 0),      // redOrange
+        Color.ORANGE,
+        Color.YELLOW,
+        new Color(0, 255, 0),        // green
+        new Color(0, 0, 255),        // blue
+        new Color(0, 128, 128),      // teal
+        new Color(153, 102, 255),    // lightPurple
+        new Color(120, 0, 255),      // purple
+        Color.WHITE
+    };
 
     public Window(Cell[][] arr, int length, int width) {
         //System.out.println("TEST");
@@ -24,7 +26,8 @@ public class Window extends JFrame {
         setLocationRelativeTo(null); // Center the window
 
         JPanel gridPanel = new JPanel(new GridLayout(dataArray.length, dataArray[0].length));
-       
+        add(gridPanel);
+
         int cycles = 0; 
         int counted = 0;
 
@@ -34,7 +37,7 @@ public class Window extends JFrame {
                 JLabel label = new JLabel();
                 label.setOpaque(true);
                 // label.setPreferredSize(new Dimension(40, 40)); // Set preferred size for each cell
-                label.setBackground(getColorForValue(dataArray[i][j].getValue()));
+                label.setBackground(colors[dataArray[i][j].getValue()-1]);
                 gridPanel.add(label);
                 cycles++;
                 if((cycles - (counted * length * width / 100)) >= length * width / 100) {
@@ -43,13 +46,11 @@ public class Window extends JFrame {
                 } 
             } 
         }
-
-        add(gridPanel);
         setVisible(true);
     }
 
     // Method to map integer values to colors
-    private Color getColorForValue(int value) {
+    /* private Color getColorForValue(int value) {
         //System.out.println("test2");
         switch (value) {
             case 1:
@@ -73,7 +74,7 @@ public class Window extends JFrame {
             default:
                 return white;
         }
-    }
+    } */
 
     public static void createWindow(Cell[][] arr, int length, int width) {
         // Example 2D array
