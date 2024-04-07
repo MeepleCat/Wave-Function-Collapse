@@ -13,8 +13,8 @@ public class WFC {
     
     public static void main(String[] args) {
         //WFC.solve(40, 80);
-        int length = 50;
-        int width = 100;
+        int length = 100;
+        int width = 200;
         int frames = 1;
         Grid grid = new Grid(length, width); 
 

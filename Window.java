@@ -11,7 +11,7 @@ public class Window extends JFrame {
     private Color green = new Color(0, 255, 0);
     private Color blue = new Color(0, 0, 255);
     private Color teal = new Color(0, 128, 128);
-    private Color lightPurple = new Color(255, 0, 255);
+    private Color lightPurple = new Color(153, 102, 255);
     private Color purple = new Color(120, 0, 255);
     private Color white = Color.WHITE;
 
