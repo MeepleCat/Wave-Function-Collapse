@@ -1,3 +1,6 @@
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
 import java.util.*;
 import javax.swing.*;
 
@@ -119,49 +122,22 @@ public class Grid {
     } 
     
     public void display() {
-        SwingUtilities.invokeLater(() -> new Window(cells, length, width));
-        /*for(Cell[] arr : cells) {
-            for(Cell c : arr) {
-                System.out.print(c.getValue() + " ");
-            }
-            System.out.println();
-        }*/
-        /* for(Cell[] arr : cells) { 
-            for(Cell c : arr) { 
-                switch(c.getValue()) {
-                    case 1:
-                        System.out.print("\u2648 "); // Red
-                        break;
-                    case 2:
-                        System.out.print("\u2649 "); // Red Orange
-                        break;                
-                    case 3:
-                        System.out.print("\u264A "); // Orange
-                        break;                
-                    case 4:
-                        System.out.print("\u264C "); // Yellow
-                        break;                
-                    case 5:
-                        System.out.print("\u264D "); // Green
-                        break;                
-                    case 6:
-                        System.out.print("\u264F "); // Teal
-                        break;                
-                    case 7:
-                        System.out.print("\u2650 "); // Blue
-                        break;                
-                    case 8:
-                        System.out.print("\u2651 "); // Light Purple
-                        break;                
-                    case 9:
-                        System.out.print("\u2652 "); // Dark Purple
-                        break;                
-                    default: 
-                        System.out.print("  ");
-                        //throw new RuntimeException("ERROR-- VALUE " + c.getValue() + " IS NOT WITHIN RANGE");
-                }
-            }
-            System.out.println();
-        } */
+        // new Window(cells, length, width);
+        dump(); 
+        // SwingUtilities.invokeLater(() -> new Window(cells, length, width));
+    }
+
+    public void dump() {
+        // List<String> lines = Arrays.asList();
+        //String[][] lines = new String[10][10];
+        
+
+        Path path = Paths.get("data.txt");
+
+        try {
+            Files.write(path, lines, StandardCharsets.UTF_8, StandardOpenOption.WRITE);
+        } catch (IOException e) {
+            // e.printStackTrace();
+        }
     }
 }

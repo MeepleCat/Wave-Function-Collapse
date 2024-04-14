@@ -2,3 +2,5 @@
 .vscode
 *.class
 build
+log.txt
+data.txt
