@@ -10,6 +10,7 @@ public class Grid {
     private int width;
     private Cell[][] cells;
     private XMLObject rules;
+    private int numColors;
     private HashMap<Integer, Color> colors = new HashMap<>();
     
     public Grid(int len, int wid, String path) { 
@@ -23,8 +24,8 @@ public class Grid {
         int[] v = new int[items.length];
         for(int i = 0; i < items.length; i++) {
             Element e = items[i];
-            HashMap<String, String> tags = e.tags();
-            String id = tags.get("id");
+            HashMap<String, String> attributes = e.attributes();
+            String id = attributes.get("id");
             v[i] = Integer.parseInt(id);
         }
 
@@ -32,12 +33,15 @@ public class Grid {
 
         cells = new Cell[len][wid];
 
+        numColors = v.length;
+
         for(int i : v) {
-            int red = Integer.parseInt(rules.searchByTag("id", Integer.toString(i)).searchByName("red").getValue());
-            int green = Integer.parseInt(rules.searchByTag("id", Integer.toString(i)).searchByName("green").getValue());
-            int blue = Integer.parseInt(rules.searchByTag("id", Integer.toString(i)).searchByName("blue").getValue());
+            int red = Integer.parseInt(rules.searchByAttribute("id", Integer.toString(i)).searchByName("red").getTag());
+            int green = Integer.parseInt(rules.searchByAttribute("id", Integer.toString(i)).searchByName("green").getTag());
+            int blue = Integer.parseInt(rules.searchByAttribute("id", Integer.toString(i)).searchByName("blue").getTag());
             colors.put(i, new Color(red, green, blue));
         }
+        colors.put(-1, new Color(255, 255, 255));
         
         for(int r = 0; r < len; r++) { 
             for(int c = 0; c < wid; c++) {
@@ -74,31 +78,31 @@ public class Grid {
             if(value != 10013) {
 
             //System.out.println("row: " + row + " col: " + col + " value: " + value);
-            //System.out.println(rules.value(rules.searchByTag("id", String.valueOf(value)).searchByName("top")));
+            //System.out.println(rules.value(rules.searchByAttribute("id", String.valueOf(value)).searchByName("top")));
             
                 if(row != 0) {
                     //System.out.println(cells[row - 1][col]);
                     //System.out.println(cells[row - 1][col].getValues());
                     //System.out.println("Top:");
-                    RestrictPossibilities.collapse(cells[row - 1][col], rules.value(rules.searchByTag("id", String.valueOf(value)).searchByName("top"))); 
+                    RestrictPossibilities.collapse(cells[row - 1][col], rules.tag(rules.searchByAttribute("id", String.valueOf(value)).searchByName("top"))); 
                 }
                 
                 if(row != length - 1) {
                     //System.out.println(cells[row + 1][col].getValues());
                     //System.out.println("Bottom:");
-                    RestrictPossibilities.collapse(cells[row + 1][col], rules.value(rules.searchByTag("id", String.valueOf(value)).searchByName("bottom")));
+                    RestrictPossibilities.collapse(cells[row + 1][col], rules.tag(rules.searchByAttribute("id", String.valueOf(value)).searchByName("bottom")));
                 }
                 
                 if(col != 0) {
                     //System.out.println(cells[row][col - 1].getValues());
                     //System.out.println("Left:");
-                    RestrictPossibilities.collapse(cells[row][col - 1], rules.value(rules.searchByTag("id", String.valueOf(value)).searchByName("left")));
+                    RestrictPossibilities.collapse(cells[row][col - 1], rules.tag(rules.searchByAttribute("id", String.valueOf(value)).searchByName("left")));
                 }
                 
                 if(col != width - 1) {
                     //System.out.println(cells[row][col + 1].getValues());
                     //System.out.println("Right:");
-                    RestrictPossibilities.collapse(cells[row][col + 1], rules.value(rules.searchByTag("id", String.valueOf(value)).searchByName("right")));
+                    RestrictPossibilities.collapse(cells[row][col + 1], rules.tag(rules.searchByAttribute("id", String.valueOf(value)).searchByName("right")));
                 }                
             }
 
@@ -112,7 +116,7 @@ public class Grid {
     public Cell findLowestEntropy() { 
         List<Integer> lowestRows = new ArrayList<Integer>(); 
         List<Integer> lowestCols = new ArrayList<Integer>(); 
-        int lowest = 10; 
+        int lowest = numColors + 1; 
 
         for(int r = 0; r < length; r++) { 
             for(int c = 0; c < width; c++) { 

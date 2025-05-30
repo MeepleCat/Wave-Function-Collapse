@@ -33,24 +33,24 @@ public class XMLObject {
     }
 
     private void parse() {
-        String firstTag = getNextTag(contents);
+        String firstAttribute = getNextAttribute(contents);
         Element firstElement = new Element();
 
-        int index = firstTag.length();
+        int index = firstAttribute.length();
         int depth = 0;
         ArrayList<Element> stack = new ArrayList<>();
 
-        depth += parseTag(firstElement, firstTag);
+        depth += parseAttribute(firstElement, firstAttribute);
         stack.add(0, firstElement);
 
         while(!contents.substring(index).equals("")) {
             // System.out.println("-------------------");
 
             contents = contents.trim();
-            String tag = getNextTag(contents.substring(index));
+            String attribute = getNextAttribute(contents.substring(index));
             Element e = new Element();
 
-            // System.out.println("tag: " + tag);
+            // System.out.println("attribute: " + attribute);
 
             int startOfImportant = index;
             int endOfImportant = contents.substring(startOfImportant).indexOf("<") + startOfImportant;
@@ -58,24 +58,24 @@ public class XMLObject {
             // System.out.println("important: " + important);
 
             if(!important.equals(important.replaceAll("[A-z0-9]", ""))) {
-                stack.get(0).appendValue(important.trim().replaceAll("/\\s\\s+/g", " "));
+                stack.get(0).appendTag(important.trim().replaceAll("/\\s\\s+/g", " "));
                 index += important.length();
             }
 
-            if(parseTag(e, tag) == 1) {
-                // System.out.println("parsed a tag to 1");
+            if(parseAttribute(e, attribute) == 1) {
+                // System.out.println("parsed a attribute to 1");
                 stack.get(0).addChild(e);
                 stack.add(0, e);
                 depth++;
             }
             else {
-                // System.out.println("parsed a tag to -1");
+                // System.out.println("parsed a attribute to -1");
                 stack.remove(0);
                 depth--;
             }
           
             index += (contents.substring(index).length() - contents.substring(index).trim().length());
-            index += tag.length();  
+            index += attribute.length();  
 
             // System.out.println("remaining in contents: " + contents.substring(index));
             // System.out.println("index: " + index + "\ncontents.length: " + contents.length());
@@ -86,7 +86,7 @@ public class XMLObject {
         // System.out.println(e.toString());
     }
 
-    private String getNextTag(String s) {
+    private String getNextAttribute(String s) {
         int open = s.indexOf("<");
         int close = s.indexOf(">");
 
@@ -94,13 +94,13 @@ public class XMLObject {
 
         if((close == -1 || close == 0) || close < open) throw new RuntimeException("Invalid index of closing bracket.");
         
-        String tag = s.substring(open, close + 1);
+        String attribute = s.substring(open, close + 1);
 
-        return tag;
+        return attribute;
     }
 
-    private int parseTag(Element e, String s) {
-        // System.out.println("tag passed to parseTag: " + s);
+    private int parseAttribute(Element e, String s) {
+        // System.out.println("attribute passed to parseAttribute: " + s);
         // System.out.println("index of first space is: " + s.indexOf(" "));
 
         s = s.trim();
@@ -121,11 +121,11 @@ public class XMLObject {
                 // System.out.println("char at 1st quote: " + relevant.substring(firstQuote, firstQuote+1) + "\nchar at 2nd quote: " + relevant.substring(secondQuote, secondQuote+1));
                 // System.out.println("thing between 1st and 2nd quotes: " + relevant.substring(firstQuote, secondQuote) + "-\n");
 
-                String tagName = relevant.substring(0, firstQuote - 1);
-                String tagValue = relevant.substring(firstQuote + 1, secondQuote - 1);
+                String attributeName = relevant.substring(0, firstQuote - 1);
+                String attributeTag = relevant.substring(firstQuote + 1, secondQuote - 1);
 
-                // System.out.println("tagName: " + tagName + "\ntagValue: " + tagValue);
-                e.addTag(tagName, tagValue);
+                // System.out.println("attributeName: " + attributeName + "\nattributeTag: " + attributeTag);
+                e.addAttribute(attributeName, attributeTag);
 
                 relevant = relevant.substring(secondQuote);
                 if(relevant.indexOf(",") == 0) relevant = relevant.substring(1);
@@ -143,27 +143,27 @@ public class XMLObject {
         return main.toString();
     }
 
-    public Element searchByTag(String tagName, String tagValue) {
-        return main.searchByTag(tagName, tagValue);
+    public Element searchByAttribute(String attributeName, String attributeTag) {
+        return main.searchByAttribute(attributeName, attributeTag);
     }
 
-    public Element searchByValue(String v) {
-        return main.searchByValue(v);
+    public Element searchByTag(String v) {
+        return main.searchByTag(v);
     }
 
     public Element searchByName(String n) {
         return main.searchByName(n);
     }
 
-    public String value(Element e) {
-        return e.getValue();
+    public String tag(Element e) {
+        return e.getTag();
     }
 }
 
 class Element {
     private String name;
-    private HashMap<String, String> tags;
-    private String value;
+    private HashMap<String, String> attributes;
+    private String tag;
     private Element[] children;
     private boolean hasSet = false;
 
@@ -173,8 +173,8 @@ class Element {
 
     public Element() {
         name = "";
-        tags = new HashMap<String, String>();
-        value = "";
+        attributes = new HashMap<String, String>();
+        tag = "";
         children = null;
         //Element(null, null, null, null);
     }
@@ -183,16 +183,16 @@ class Element {
     ///////////////////////// ACTUAL METHODS /////////////////////////
     //////////////////////////////////////////////////////////////////
 
-    public Element searchByTag(String tagName, String tagValue) {
+    public Element searchByAttribute(String attributeName, String attributeTag) {
         try {
-            if(tags.get(tagName).equals(tagValue)) {
+            if(attributes.get(attributeName).equals(attributeTag)) {
                 return this;
             }
         }
         catch(Exception except) {
             if(children == null) return null;
             for(Element e : children) {
-                Element el = e.searchByTag(tagName, tagValue);
+                Element el = e.searchByAttribute(attributeName, attributeTag);
                 if(el != null) return el;
             }
 
@@ -202,12 +202,12 @@ class Element {
         return null;
     }
 
-    public Element searchByValue(String v) {
-        if(value != null && value.equals(v)) return this;
+    public Element searchByTag(String v) {
+        if(tag != null && tag.equals(v)) return this;
         else {
             if(children == null) return null;
             for(Element e : children) {
-                Element el = e.searchByValue(v);
+                Element el = e.searchByTag(v);
                 if(el != null) return el;
             }
 
@@ -232,10 +232,10 @@ class Element {
         String s = "";
 
         s += "<" + name;
-        for(Object t : tags.keySet()) s += " " + t + "=\"" + tags.get(t) + "\""; 
+        for(Object t : attributes.keySet()) s += " " + t + "=\"" + attributes.get(t) + "\""; 
         s += ">";
 
-        if(value != null) s += value;
+        if(tag != null) s += tag;
 
         if(children != null) for(Element e : children) {
             s += e.toString();
@@ -258,16 +258,16 @@ class Element {
         return children;
     }
 
-    public HashMap<String, String> tags() {
-        return tags;
+    public HashMap<String, String> attributes() {
+        return attributes;
     }
 
-    public String getValue() {
-        return value; 
+    public String getTag() {
+        return tag; 
     }
 
     public Set<Map.Entry<String, String>> getEntrySet() {
-        return tags.entrySet();
+        return attributes.entrySet();
     }
 
     ///////////////////////////////////////////////////////////////
@@ -301,21 +301,21 @@ class Element {
         // System.out.println("Children: " + children.toString());
     }
 
-    public void addTag(String t, String v) {
-        tags.put(t, v);
+    public void addAttribute(String t, String v) {
+        attributes.put(t, v);
     }
 
-    public void setValue(String s) {
-        value = s; 
+    public void setTag(String s) {
+        tag = s; 
     }
 
-    public void appendValue(String s) {
+    public void appendTag(String s) {
         if(!hasSet) {
-            setValue(s);
+            setTag(s);
             hasSet = true;
             return;
         }
   
-        value += s;
+        tag += s;
     }
 }

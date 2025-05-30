@@ -28,12 +28,12 @@ public class Cell {
     }
     
     public int getValue() {
-        int value = 9;
+        int value = -1;
 
         for(int i : values) { 
             if(i != -1) {
-                if(value != 9) { 
-                    return 9;
+                if(value != -1) { 
+                    return -1;
                 }
                 value = i;
             }

@@ -29,7 +29,7 @@ public class WFC {
         //solveInIntervals(100, 100, 5);
         //solve(150, 250);
         //solve(500, 888, "rules3.xml");
-        solve(200, 355, "rules3.xml");
+        solve(200, 355, "sample.xml");
         System.out.println("-------------------------------------------------------------------------------------------------------------");
     }
 }
