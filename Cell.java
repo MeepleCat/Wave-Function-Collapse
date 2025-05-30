@@ -1,20 +1,25 @@
+import java.util.Arrays;
+
 public class Cell {
     private int row;
     private int col;
     private boolean collapsed;
     
-    private int[] values = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    private int[] values;
     
-    public Cell(int r, int c) { 
+    public Cell(int r, int c, int[] v) { 
         row = r;
         col = c;
+        values = v;
         collapsed = false; 
+
+        // System.out.println(Arrays.toString(v));
     } 
     
     public int findEntropy() { 
         int count = 0; 
         for(int i : values) { 
-            if(i != 0) { 
+            if(i != -1) { 
                 count++;
             }
         }
@@ -23,17 +28,18 @@ public class Cell {
     }
     
     public int getValue() {
-        int value = 10;
+        int value = 9;
 
         for(int i : values) { 
-            if(i != 0) {
-                if(value != 10) { 
-                    return 10;
+            if(i != -1) {
+                if(value != 9) { 
+                    return 9;
                 }
                 value = i;
             }
         }
         
+        // System.out.println(Arrays.toString(values) + "  " + value);
         return value;
     }
     
@@ -41,7 +47,7 @@ public class Cell {
         int states = 0;
         
         for(int i : values) { 
-            if(i != 0) { 
+            if(i != -1) { 
                 states++;
             }
         } 
@@ -51,12 +57,12 @@ public class Cell {
         int value = 0;
         
         for(int i = 0; i < values.length; i++) { 
-            if(values[i] != 0) { 
+            if(values[i] != -1) { 
                 if(pos == random) { 
                     value = values[i];
                 }
                 else {
-                    values[i] = 0;
+                    values[i] = -1;
                 }
                 pos++;
             }
@@ -64,6 +70,8 @@ public class Cell {
         
         collapsed = true; 
         
+        // System.out.println(Arrays.toString(values) + "  " + value);
+
         return value; 
     }
     

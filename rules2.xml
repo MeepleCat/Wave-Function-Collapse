@@ -1,0 +1,26 @@
+<items>
+  <item id="5">
+    <top>6</top>
+    <bottom>6</bottom>
+    <left>6</left>
+    <right>6</right>
+  </item>
+  <item id="6">
+    <top>5 7</top>
+    <bottom>5 7</bottom>
+    <left>5 7</left>
+    <right>5 7</right>
+  </item>
+  <item id="7">
+    <top>6 8</top>
+    <bottom>6 8</bottom>
+    <left>6 8</left>
+    <right>6 8</right>
+  </item>
+  <item id="8">
+    <top>7</top>
+    <bottom>7</bottom>
+    <left>7</left>
+    <right>7</right>
+  </item>
+</items>
